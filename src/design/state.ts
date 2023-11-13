@@ -47,16 +47,14 @@ export class State extends EventEmitter<StateEvent> {
     super();
     this.history = new History(options.historySize);
 
-    this.palette.setColor(0, "#000");
-    this.palette.setColor(1, "#fc130f");
-
-    this.palette.select(0);
-    // console.log(this.palette);
+    this.createPalette();
 
     this.mode = new PaintMode();
     this.canvas = new Canvas(options.id);
     this.grid = new Grid(this, options);
     this.cells = new CellMap(this.grid.cols, this.grid.rows);
+
+    window.s = this;
   }
 
   public mount() {
@@ -67,6 +65,15 @@ export class State extends EventEmitter<StateEvent> {
     this.registerInput();
     this.draw();
     this.mounted = true;
+  }
+
+  public createPalette() {
+    this.palette.newColor("#000");
+    this.palette.newColor("#09f97d");
+    this.palette.newColor("#09f9f5");
+    this.palette.select(0);
+
+    this.palette.on("update-color", () => this.draw());
   }
 
   public setMode(mode: ModeType) {

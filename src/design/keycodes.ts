@@ -1,4 +1,7 @@
 // TODO: Update for getLayoutMap
+
+import { Maybe } from "./types";
+
 // @see https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/getLayoutMap
 export const KeyCode = {
   Escape: "Escape",
@@ -64,5 +67,30 @@ export const KeyCode = {
   N: "KeyN",
   M: "KeyM",
 } as const;
+
+export function numFromDigitKey(key: KeyCode): Maybe<number> {
+  switch (key) {
+    case KeyCode.Digit0:
+      return 0;
+    case KeyCode.Digit1:
+      return 1;
+    case KeyCode.Digit2:
+      return 2;
+    case KeyCode.Digit3:
+      return 3;
+    case KeyCode.Digit4:
+      return 4;
+    case KeyCode.Digit5:
+      return 5;
+    case KeyCode.Digit6:
+      return 6;
+    case KeyCode.Digit7:
+      return 7;
+    case KeyCode.Digit8:
+      return 8;
+    case KeyCode.Digit9:
+      return 9;
+  }
+}
 
 export type KeyCode = (typeof KeyCode)[keyof typeof KeyCode];

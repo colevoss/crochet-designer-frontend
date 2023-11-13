@@ -84,4 +84,44 @@ export class CellMap implements Draw {
       this.cells[i].draw(state);
     }
   }
+
+  public test() {
+    const str: string[] = [];
+
+    let lastColorId: string | number = "x";
+    let colorCount = 0;
+
+    for (let i = 0; i < this.sparse.length; i++) {
+      const idx = this.sparse[i];
+
+      const colorId = idx === undefined ? "x" : this.cells[idx].color?.id!;
+
+      if (lastColorId === undefined) {
+        lastColorId = colorId;
+      }
+
+      if (lastColorId === colorId) {
+        colorCount++;
+        continue;
+      }
+
+      const newStr = `${lastColorId}-${colorCount}`;
+      str.push(newStr);
+      lastColorId = colorId;
+      colorCount = 1;
+    }
+
+    if (lastColorId !== "x") {
+      const newStr = `${lastColorId}.${colorCount}`;
+      console.log(newStr);
+      str.push(newStr);
+    }
+
+    console.log(str.join());
+
+    // for (let i = 0; i < this.cells.length; i++) {
+    //   const cell = this.cells[i];
+    //   str.push(`${cell.idx}-${cell.color!.id}`);
+    // }
+  }
 }

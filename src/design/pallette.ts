@@ -24,6 +24,8 @@ export class Color {
 }
 
 type PaletteEvents = {
+  "new-color": Color;
+  "update-color": Color;
   color: Color;
   select: Color;
 };
@@ -55,26 +57,39 @@ export class Palette extends EventEmitter<PaletteEvents> {
     return this.#colors;
   }
 
+  public newColor(colorStr: string): Color {
+    const color = new Color(this.#colors.length, colorStr);
+    this.#colors.push(color);
+    this.emit("new-color", color);
+
+    return color;
+  }
+
   public getColor(id: number): Maybe<Color> {
     return this.#colors[id];
   }
 
   public setColor(id: number, description: string) {
-    let color = this.getColor(id);
+    const color = this.getColor(id);
 
     if (color === undefined) {
-      color = new Color(id, description);
-      this.#colors[id] = color;
+      // color = new Color(id, description);
+      // this.#colors[id] = color;
+      // this.emit("new-color", color);
 
       return;
     }
 
     color.color = description;
 
-    this.emit("color", color);
+    this.emit("update-color", color);
   }
 
   public rawData() {
     return this.#colors.map((c) => c.data());
+  }
+
+  public urlData() {
+    return this.#colors.map((c) => c.color).join();
   }
 }

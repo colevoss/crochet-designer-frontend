@@ -217,4 +217,11 @@ export class Grid implements Draw {
 
     return true;
   }
+
+  public urlData() {
+    return {
+      w: this.cols,
+      h: this.rows,
+    };
+  }
 }

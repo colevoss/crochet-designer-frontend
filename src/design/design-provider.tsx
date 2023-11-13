@@ -44,23 +44,58 @@ export function usePalette(): [Palette, ColorData[], Maybe<ColorData>] {
     palette.selected?.data(),
   );
 
-  useEffect(() => {
-    const colorUnsub = palette.on("color", () => {
-      setColors(palette.rawData());
-    });
-
-    return colorUnsub;
-  }, []);
+  const resetColors = () => setColors(palette.rawData());
 
   useEffect(() => {
+    const newColorUnsub = palette.on("new-color", resetColors);
+    const updateColorUnsub = palette.on("update-color", resetColors);
     const selectUnsub = palette.on("select", (newSelected) => {
       setSelected(newSelected.data());
     });
 
-    return selectUnsub;
+    return () => {
+      newColorUnsub();
+      updateColorUnsub();
+      selectUnsub();
+    };
   }, []);
 
   return [palette, colors, selected];
+}
+
+type HistoryHookState = {
+  canUndo: boolean;
+  canRedo: boolean;
+};
+
+export function useHistory(): HistoryHookState {
+  const design = useDesign();
+  const history = design.history;
+  const [state, setHistoryState] = useState<HistoryHookState>({
+    canUndo: history.canUndo(),
+    canRedo: history.canRedo(),
+  });
+
+  const resetState = () => {
+    setHistoryState({
+      canUndo: history.canUndo(),
+      canRedo: history.canRedo(),
+    });
+  };
+
+  useEffect(() => {
+    const undoUnsub = history.on("undo", resetState);
+    const redoUnsub = history.on("redo", resetState);
+    const executeUnsub = history.on("execute", resetState);
+
+    return () => {
+      undoUnsub();
+      redoUnsub();
+      executeUnsub();
+    };
+  }, []);
+
+  return state;
 }
 
 export function DesignProvider({ design, children }: Props) {

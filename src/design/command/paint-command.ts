@@ -1,13 +1,14 @@
+import { Color } from "../pallette";
 import { State } from "../state";
 import { Maybe } from "../types";
 import { Command } from "./command";
 
 export class PaintCellCommand extends Command {
-  private prevColor: Maybe<string> = "#fff";
+  private prevColor: Maybe<Color>;
 
   constructor(
     public idx: number,
-    public color: string,
+    public color: Color,
   ) {
     super();
   }
@@ -15,12 +16,12 @@ export class PaintCellCommand extends Command {
   public execute(state: State): boolean {
     const cell = state.cells.getOrAdd(state, this.idx);
 
-    if (cell.fill === this.color) {
+    if (cell.color === this.color) {
       return false;
     }
 
-    this.prevColor = cell.fill;
-    cell.fill = this.color;
+    this.prevColor = cell.color;
+    cell.color = this.color;
     cell.draw(state);
 
     return true;
@@ -34,7 +35,7 @@ export class PaintCellCommand extends Command {
     }
 
     if (this.prevColor) {
-      cell.fill = this.prevColor;
+      cell.color = this.prevColor;
       cell.draw(state);
       return;
     }

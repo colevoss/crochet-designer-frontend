@@ -1,4 +1,3 @@
-import { PaintMode } from ".";
 import { State } from "../state";
 
 export enum ModeType {

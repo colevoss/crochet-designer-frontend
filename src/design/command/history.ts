@@ -1,7 +1,14 @@
+import { EventEmitter } from "../event-emitter";
 import { State } from "../state";
 import { Command } from "./command";
 
-export class History {
+type HistoryEvents = {
+  undo: null;
+  redo: null;
+  execute: null;
+};
+
+export class History extends EventEmitter<HistoryEvents> {
   cursor: number = -1;
   commands: Command[] = [];
   queue: Command[] = [];
@@ -9,6 +16,7 @@ export class History {
   limit: number = Infinity;
 
   constructor(limit?: number) {
+    super();
     if (limit !== undefined) {
       this.limit = limit;
     }
@@ -19,6 +27,18 @@ export class History {
     return this;
   }
 
+  public canUndo(): boolean {
+    return this.cursor > -1;
+  }
+
+  public canRedo(): boolean {
+    if (this.commands.length === 0) {
+      return false;
+    }
+
+    return this.cursor < this.commands.length - 1;
+  }
+
   public execute(state: State): this {
     for (let i = 0; i < this.queue.length; i++) {
       const command = this.queue[i];
@@ -27,6 +47,7 @@ export class History {
 
     this.queue = [];
 
+    this.emit("execute", null);
     return this;
   }
 
@@ -39,6 +60,8 @@ export class History {
 
     command.undo(state);
     this.cursor = this.cursor - 1;
+
+    this.emit("undo", null);
   }
 
   public redo(state: State) {
@@ -51,6 +74,7 @@ export class History {
 
     command.execute(state);
     this.cursor = cursor;
+    this.emit("redo", null);
   }
 
   private runCommand(state: State, command: Command) {

@@ -1,12 +1,14 @@
 import { Draw } from "../draw";
+import { Color } from "../pallette";
 import { State } from "../state";
 import { CellDimensions, Maybe } from "../types";
 
 export class Cell implements Draw {
   idx: number;
 
-  fill: Maybe<string>;
   stroke: string = "#888";
+
+  color: Maybe<Color>;
 
   col: number;
   row: number;
@@ -23,7 +25,7 @@ export class Cell implements Draw {
       return;
     }
 
-    if (this.fill === undefined) {
+    if (this.color === undefined) {
       return;
     }
 
@@ -33,7 +35,7 @@ export class Cell implements Draw {
 
     state.canvas.ctx.clearRect(x, y, w, h);
 
-    state.canvas.ctx.fillStyle = this.fill;
+    state.canvas.ctx.fillStyle = this.color.color;
     state.canvas.ctx.fillRect(x, y, w, h);
 
     state.canvas.ctx.restore();

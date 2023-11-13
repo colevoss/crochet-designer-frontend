@@ -1,39 +1,14 @@
 import "./App.css";
-import { useDesign, useModeType, usePalette } from "./design";
-import { ModeType } from "./design/modes";
+import { ModePicker } from "./components/mode/mode-picker";
+import { PalettePicker } from "./components/palette/palette-picker";
+import { Commands } from "@/components/commands/commands";
 
 function App() {
-  const design = useDesign();
-  const modeType = useModeType();
-  const [palette, colors = [], selected] = usePalette();
-
-  console.log(selected);
-
   return (
-    <div>
-      <button
-        disabled={modeType === ModeType.Paint}
-        onClick={() => design.setMode(ModeType.Paint)}
-      >
-        Paint
-      </button>
-      <button
-        disabled={modeType === ModeType.Erase}
-        onClick={() => design.setMode(ModeType.Erase)}
-      >
-        Erase
-      </button>
-
-      <div>
-        {colors.map((c) => {
-          return (
-            <div key={c.id + c.color}>
-              {c.id} - {c.color} {c.id === selected?.id ? "x" : ""}
-            </div>
-          );
-        })}
-        <button onClick={() => palette.select(1)}>Heh</button>
-      </div>
+    <div className="flex flex-row bg-white align-top divide-x divide-neutral-300 p-2 space-x-5">
+      <Commands />
+      <ModePicker />
+      <PalettePicker />
     </div>
   );
 }

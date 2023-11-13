@@ -1,4 +1,5 @@
 import { PaintCellCommand, PaintStrokeCommand } from "../command";
+import { KeyCode, numFromDigitKey } from "../keycodes";
 import { State } from "../state";
 import { Maybe } from "../types";
 import { BaseMode } from "./base-mode";
@@ -39,6 +40,31 @@ export class PaintMode extends BaseMode {
     this.paintCell(state, event.offsetX, event.offsetY);
   }
 
+  public keyDown(state: State, event: KeyboardEvent): void {
+    super.keyDown(state, event);
+    let paletteId: Maybe<number>;
+
+    switch (event.code) {
+      case KeyCode.Digit1:
+      case KeyCode.Digit2:
+      case KeyCode.Digit3:
+      case KeyCode.Digit4:
+      case KeyCode.Digit5:
+      case KeyCode.Digit6:
+      case KeyCode.Digit7:
+      case KeyCode.Digit8:
+      case KeyCode.Digit9:
+        paletteId = numFromDigitKey(event.code);
+        break;
+    }
+
+    if (paletteId === undefined) {
+      return;
+    }
+
+    state.palette.select(paletteId - 1);
+  }
+
   private paintCell(state: State, x: number, y: number) {
     if (this.paintStrokeCommand === undefined) {
       return;
@@ -49,7 +75,13 @@ export class PaintMode extends BaseMode {
       return;
     }
 
-    const paint = new PaintCellCommand(idx, "#000");
+    const color = state.palette.selected;
+
+    if (color === undefined) {
+      return;
+    }
+
+    const paint = new PaintCellCommand(idx, color);
     this.paintStrokeCommand.addCellPaint(state, paint);
   }
 }
