@@ -53,8 +53,6 @@ export class State extends EventEmitter<StateEvent> {
     this.canvas = new Canvas(options.id);
     this.grid = new Grid(this, options);
     this.cells = new CellMap(this.grid.cols, this.grid.rows);
-
-    window.s = this;
   }
 
   public mount() {
@@ -69,8 +67,8 @@ export class State extends EventEmitter<StateEvent> {
 
   public createPalette() {
     this.palette.newColor("#000");
-    this.palette.newColor("#09f97d");
-    this.palette.newColor("#09f9f5");
+    // this.palette.newColor("#09f97d");
+    // this.palette.newColor("#09f9f5");
     this.palette.select(0);
 
     this.palette.on("update-color", () => this.draw());

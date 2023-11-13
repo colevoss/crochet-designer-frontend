@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+// import { Plus } from "lucide-react";
 import { usePalette } from "@/design/design-provider";
 import { PaletteColor } from "./palette-color";
 
@@ -19,12 +19,12 @@ export function PalettePicker() {
           );
         })}
 
-        <button
-          className="p-3 bg-neutral-100 hover:bg-neutral-200"
-          onClick={() => palette.newColor("#2f3ae0")}
-        >
-          <Plus />
-        </button>
+        {/* <button */}
+        {/*   className="p-3 bg-neutral-100 hover:bg-neutral-200" */}
+        {/*   onClick={() => palette.newColor("#2f3ae0")} */}
+        {/* > */}
+        {/*   <Plus /> */}
+        {/* </button> */}
       </div>
     </div>
   );
