@@ -4,6 +4,7 @@ import { Mode, ModeType } from "./mode";
 
 export abstract class BaseMode implements Mode {
   public abstract readonly mode: ModeType;
+  private metaPressed: boolean = false;
 
   // @ts-ignore
   public mouseDown(state: State, event: MouseEvent) {}
@@ -25,6 +26,21 @@ export abstract class BaseMode implements Mode {
 
       case KeyCode.Z:
         this.handleUndo(state, event);
+        break;
+
+      case KeyCode.MetaLeft:
+      case KeyCode.MetaRight:
+        this.metaPressed = true;
+        break;
+    }
+  }
+
+  // @ts-ignore
+  public keyUp(state: State, event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.MetaLeft:
+      case KeyCode.MetaRight:
+        this.metaPressed = false;
         break;
     }
   }
@@ -50,6 +66,18 @@ export abstract class BaseMode implements Mode {
     state.history.undo(state);
   }
 
-  // @ts-ignore
-  public keyUp(state: State, event: KeyboardEvent) {}
+  public wheel(state: State, event: WheelEvent): void {
+    event.preventDefault();
+    requestAnimationFrame(() => this.onWheel(state, event));
+  }
+
+  private onWheel(state: State, event: WheelEvent): void {
+    if (this.metaPressed) {
+      state.grid.zoom(-event.deltaY / 3000);
+    } else {
+      state.grid.scroll(-event.deltaX, -event.deltaY);
+    }
+
+    state.draw();
+  }
 }

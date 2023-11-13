@@ -143,18 +143,7 @@ export class State extends EventEmitter<StateEvent> {
 
   private registerScroll() {
     this.canvas.element.addEventListener("wheel", (event) => {
-      event.preventDefault();
-      requestAnimationFrame(() => this.onWheel(event));
+      this.mode.wheel(this, event);
     });
-  }
-
-  private onWheel(event: WheelEvent) {
-    if (!this.metaPressed) {
-      this.grid.scroll(-event.deltaX, -event.deltaY);
-    } else {
-      this.grid.zoom(-event.deltaY / 3000);
-    }
-
-    this.draw();
   }
 }

@@ -15,4 +15,6 @@ export interface Mode {
 
   keyDown(state: State, event: KeyboardEvent): void;
   keyUp(state: State, event: KeyboardEvent): void;
+
+  wheel(state: State, event: WheelEvent): void;
 }
