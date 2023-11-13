@@ -5,8 +5,8 @@ import "./index.css";
 import { DesignProvider, State } from "./design/index.ts";
 
 const state = new State({
-  cols: 50,
-  rows: 50,
+  cols: 74,
+  rows: 45,
   size: 1,
   id: "designer",
   historySize: 10,
