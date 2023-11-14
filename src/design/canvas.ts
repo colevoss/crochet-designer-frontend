@@ -1,6 +1,6 @@
 export class Canvas {
-  #height: number;
-  #width: number;
+  #height: number = 0;
+  #width: number = 0;
   id: string;
 
   element: HTMLCanvasElement;
@@ -15,43 +15,58 @@ export class Canvas {
     return this.#width;
   }
 
-  constructor(id: string) {
-    // Get canvas element and context
-    this.id = id;
-    const canvas = document.getElementById(id) as HTMLCanvasElement | null;
+  public container: HTMLElement;
 
-    if (!canvas || !canvas.getContext) {
-      throw new Error(
-        `Canvas element ${id} does not exist or is not <canvas> element`,
-      );
+  constructor(id: string) {
+    this.id = id;
+
+    const container = document.getElementById(id);
+
+    if (container === null) {
+      throw new Error(`Element ${id} does not exist`);
     }
 
-    this.element = canvas as HTMLCanvasElement;
+    this.container = container;
 
-    const context = canvas.getContext("2d", { alpha: false })!;
-    this.ctx = context;
+    this.element = document.createElement("canvas");
+    this.element.id = "crochet-canvas";
+    this.container.appendChild(this.element);
 
-    // Size
-    // @see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas#scaling_for_high_resolution_displays
-
+    this.ctx = this.element.getContext("2d", { alpha: true })!;
     this.dpr = window.devicePixelRatio;
 
-    const boundingRect = this.element.getBoundingClientRect();
+    this.ctx.scale(this.dpr, this.dpr);
+    this.prepareDraw();
+  }
 
-    const height = boundingRect.height;
-    const width = boundingRect.width;
+  public setDimensions(h: number, w: number) {
+    this.#height = h;
+    this.#width = w;
 
-    this.#height = height;
-    this.#width = width;
+    this.updateElement();
+  }
 
-    this.element.height = height * this.dpr;
-    this.element.width = width * this.dpr;
+  // I think I want the height and width setting to be done in the State component
+  private prepareDraw() {
+    const toolbar = document.getElementById("toolbar")!;
+    const toolbarHeight = toolbar.getBoundingClientRect().height;
+    const windowHeight = window.innerHeight;
+
+    const height = windowHeight - toolbarHeight;
+    const width = window.innerWidth;
+    // this.updateElement();
+
+    this.setDimensions(height, width);
+  }
+
+  private updateElement() {
+    this.element.height = this.#height * this.dpr;
+    this.element.width = this.#width * this.dpr;
 
     this.ctx.scale(this.dpr, this.dpr);
 
-    // Set the "drawn" size of the canvas
-    this.element.style.width = `${boundingRect.width}px`;
-    this.element.style.height = `${boundingRect.height}px`;
+    this.element.style.width = `${this.#width}px`;
+    this.element.style.height = `${this.#height}px`;
   }
 
   save() {

@@ -7,8 +7,8 @@ export class Grid implements Draw {
   ruler: Ruler;
   #zoom: number = 1;
 
-  public readonly height: number;
-  public readonly width: number;
+  public height: number;
+  public width: number;
 
   public readonly cols: number;
   public readonly rows: number;
@@ -28,20 +28,25 @@ export class Grid implements Draw {
     this.cols = cols;
     this.rows = rows;
 
-    this.cellWidth = this.width / this.cols;
+    this.cellWidth = (this.width - this.ruler.width) / this.cols;
     this.cellHeight = this.cellWidth / size;
+  }
+
+  refresh(state: State) {
+    this.width = state.canvas.width;
+    this.height = state.canvas.height;
   }
 
   // TODO: figure what perfect zoom is for showing all of grid
   public zoom(z: number) {
     const newZoom = this.#zoom + z;
 
-    const gridHeight = this.gridHeightAtZoom(newZoom);
-    const gridWidth = this.gridWidthAtZoom(newZoom);
+    // const gridHeight = this.gridHeightAtZoom(newZoom);
+    // const gridWidth = this.gridWidthAtZoom(newZoom);
 
-    if (gridHeight <= this.height && gridWidth <= this.width) {
-      return;
-    }
+    // if (gridHeight <= this.height && gridWidth <= this.width) {
+    //   return;
+    // }
 
     this.#zoom = newZoom;
 
