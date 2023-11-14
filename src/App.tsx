@@ -1,4 +1,5 @@
 import "./App.css";
+import { Downloader } from "./components/downloader";
 import { ModePicker } from "./components/mode/mode-picker";
 import { PalettePicker } from "./components/palette/palette-picker";
 import { Commands } from "@/components/commands/commands";
@@ -9,6 +10,7 @@ function App() {
       <Commands />
       <ModePicker />
       <PalettePicker />
+      <Downloader />
     </div>
   );
 }

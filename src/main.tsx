@@ -8,7 +8,8 @@ const state = new State({
   cols: 74,
   rows: 45,
   size: 1,
-  id: "designer",
+  // id: "designer",
+  id: "canvas-container",
   historySize: 10,
 });
 

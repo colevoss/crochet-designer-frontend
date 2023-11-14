@@ -5,6 +5,7 @@ import { EventEmitter } from "./event-emitter";
 import { Grid } from "./grid";
 import { EraseMode, Mode, ModeType, PaintMode } from "./modes";
 import { Palette } from "./pallette";
+import { Maybe } from "./types";
 
 export type Options = {
   cols: number;
@@ -41,6 +42,8 @@ export class State extends EventEmitter<StateEvent> {
     eraseMode: new EraseMode(),
   };
 
+  toolbarHeight: Maybe<number>;
+
   public readonly palette: Palette = new Palette();
 
   constructor(options: Options) {
@@ -55,14 +58,39 @@ export class State extends EventEmitter<StateEvent> {
     this.cells = new CellMap(this.grid.cols, this.grid.rows);
   }
 
+  private getToolbarHeight(): number {
+    if (this.toolbarHeight !== undefined) {
+      return this.toolbarHeight;
+    }
+
+    const toolbar = document.getElementById("toolbar")!;
+    const toolbarHeight = toolbar.getBoundingClientRect().height;
+
+    this.toolbarHeight = toolbarHeight;
+    return toolbarHeight;
+  }
+
+  private getCanvasHeight(): number {
+    return window.innerHeight - this.getToolbarHeight();
+  }
+
+  private getCanvasWidth(): number {
+    return window.innerWidth;
+  }
+
   public mount() {
     if (this.mounted) {
       return;
     }
 
     this.registerInput();
-    this.draw();
+    // this.canvas.prepareDraw();
+    this.canvas.setDimensions(this.getCanvasHeight(), this.getCanvasWidth());
+    this.grid.refresh(this);
+    // this.draw();
+
     this.mounted = true;
+    this.draw();
   }
 
   public createPalette() {
@@ -100,6 +128,7 @@ export class State extends EventEmitter<StateEvent> {
     this.registerKey();
     this.registerScroll();
     this.registerMouseMove();
+    this.registerResize();
   }
 
   public draw() {
@@ -113,6 +142,22 @@ export class State extends EventEmitter<StateEvent> {
 
     this.grid.draw(this);
     this.cells.draw(this);
+  }
+
+  private resizeTimeout: Maybe<number>;
+
+  private registerResize() {
+    window.addEventListener("resize", () => {
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        this.canvas.setDimensions(
+          this.getCanvasHeight(),
+          this.getCanvasWidth(),
+        );
+        this.grid.refresh(this);
+        this.draw();
+      }, 33) as unknown as number;
+    });
   }
 
   private registerMouseMove() {
