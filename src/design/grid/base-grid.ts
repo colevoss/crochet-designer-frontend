@@ -163,11 +163,21 @@ export abstract class BaseGrid implements Draw {
   }
 
   public getCellDimmension(col: number, row: number): CellDimensions {
-    const x = col * this.cellWidth * this.z + this.offsetX + this.ruler.width;
-    const y = row * this.cellHeight * this.z + this.offsetY + this.ruler.height;
+    let x = col * this.cellWidth * this.z + this.offsetX + this.ruler.width;
+    let y = row * this.cellHeight * this.z + this.offsetY + this.ruler.height;
 
-    const width = this.realCellWidth;
-    const height = this.realCellHeight;
+    let width = this.realCellWidth;
+    let height = this.realCellHeight;
+
+    if (y < this.ruler.height) {
+      height -= this.ruler.height - y;
+      y = this.ruler.height;
+    }
+
+    if (x < this.ruler.width) {
+      width -= this.ruler.width - x;
+      x = this.ruler.width;
+    }
 
     return [x, y, width, height];
   }
@@ -179,7 +189,8 @@ export abstract class BaseGrid implements Draw {
     const top = row * cellHeight + this.realOffsetY;
     const bottom = top + cellHeight;
 
-    if (bottom < 0) {
+    // if (bottom < 0) {
+    if (bottom < this.ruler.height) {
       return false;
     }
 
@@ -190,7 +201,7 @@ export abstract class BaseGrid implements Draw {
     const left = col * cellWidth + this.realOffsetX;
     const right = left + cellWidth;
 
-    if (right < 0) {
+    if (right < this.ruler.width) {
       return false;
     }
 
