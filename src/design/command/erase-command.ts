@@ -1,4 +1,5 @@
 import { Cell } from "../cell";
+import { IState } from "../istate";
 import { State } from "../state";
 import { Maybe } from "../types";
 import { Command } from "./command";
@@ -15,7 +16,7 @@ export class EraseCommand extends Command {
     return true;
   }
 
-  public undo(state: State): void {
+  public undo(state: IState): void {
     state.cells.addCell(this.cell);
     this.cell.draw(state);
   }

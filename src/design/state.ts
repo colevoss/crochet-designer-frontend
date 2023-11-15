@@ -3,6 +3,8 @@ import { CellMap } from "./cell";
 import { History } from "./command";
 import { EventEmitter } from "./event-emitter";
 import { Grid } from "./grid";
+import { ImageState } from "./image/image-state";
+import { IState } from "./istate";
 import { EraseMode, Mode, ModeType, PaintMode } from "./modes";
 import { Palette } from "./pallette";
 import { Maybe } from "./types";
@@ -20,28 +22,21 @@ interface StateEvent {
   test: number;
 }
 
-export class State extends EventEmitter<StateEvent> {
-  backgroundColor: string = "#fff";
+export class State extends EventEmitter<StateEvent> implements IState {
+  bg: string = "#fff";
   canvas: Canvas;
-  history: History;
-
-  metaPressed = false;
-
   cells: CellMap;
-
-  hovered: number | null = null;
-
   grid: Grid;
 
-  mounted: boolean = false;
-
+  history: History;
   mode: Mode;
-
   #modes = {
     paintMode: new PaintMode(),
     eraseMode: new EraseMode(),
   };
 
+  metaPressed = false;
+  mounted: boolean = false;
   toolbarHeight: Maybe<number>;
 
   public readonly palette: Palette = new Palette();
@@ -52,10 +47,15 @@ export class State extends EventEmitter<StateEvent> {
 
     this.createPalette();
 
-    this.mode = new PaintMode();
+    this.mode = this.#modes.paintMode;
     this.canvas = new Canvas(options.id);
     this.grid = new Grid(this, options);
     this.cells = new CellMap(this.grid.cols, this.grid.rows);
+  }
+
+  public createImageState(): ImageState {
+    const imageState = new ImageState(this);
+    return imageState;
   }
 
   private getToolbarHeight(): number {
@@ -84,13 +84,10 @@ export class State extends EventEmitter<StateEvent> {
     }
 
     this.registerInput();
-    // this.canvas.prepareDraw();
     this.canvas.setDimensions(this.getCanvasHeight(), this.getCanvasWidth());
     this.grid.refresh(this);
-    // this.draw();
-
-    this.mounted = true;
     this.draw();
+    this.mounted = true;
   }
 
   public createPalette() {

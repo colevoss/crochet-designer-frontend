@@ -1,26 +1,24 @@
 import { Draw } from "../draw";
+import { IState } from "../istate";
 import { Color } from "../pallette";
-import { State } from "../state";
 import { CellDimensions, Maybe } from "../types";
 
 export class Cell implements Draw {
-  idx: number;
+  public readonly idx: number;
 
-  stroke: string = "#888";
+  public color: Maybe<Color>;
 
-  color: Maybe<Color>;
+  public readonly col: number;
+  public readonly row: number;
 
-  col: number;
-  row: number;
-
-  constructor(state: State, idx: number) {
+  constructor(state: IState, idx: number) {
     this.idx = idx;
 
     this.col = idx % state.grid.cols;
     this.row = Math.floor(idx / state.grid.cols);
   }
 
-  draw(state: State) {
+  public draw(state: IState) {
     if (!state.grid.isCellVisible(this.col, this.row)) {
       return;
     }
@@ -41,7 +39,7 @@ export class Cell implements Draw {
     state.canvas.ctx.restore();
   }
 
-  dimensions(state: State): CellDimensions {
+  private dimensions(state: IState): CellDimensions {
     return state.grid.getCellDimmension(this.col, this.row);
   }
 }

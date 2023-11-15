@@ -1,5 +1,5 @@
 import { Draw } from "../draw";
-import { State } from "../state";
+import { IState } from "../istate";
 import { Maybe } from "../types";
 import { Cell } from "./cell";
 
@@ -22,7 +22,7 @@ export class CellMap implements Draw {
     return this.cells[denseIdx];
   }
 
-  public add(state: State, idx: number): Cell {
+  public add(state: IState, idx: number): Cell {
     this.assertInRange(idx);
 
     const cell = new Cell(state, idx);
@@ -33,7 +33,7 @@ export class CellMap implements Draw {
     return cell;
   }
 
-  public getOrAdd(state: State, idx: number): Cell {
+  public getOrAdd(state: IState, idx: number): Cell {
     const cell = this.get(idx);
 
     if (cell !== undefined) {
@@ -77,7 +77,8 @@ export class CellMap implements Draw {
     }
   }
 
-  public draw(state: State): void {
+  // public draw(state: State): void {
+  public draw(state: IState): void {
     const cellCount = this.cells.length;
 
     for (let i = 0; i < cellCount; i++) {

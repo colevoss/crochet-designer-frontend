@@ -1,21 +1,33 @@
 import { Draw } from "../draw";
-import { State } from "../state";
+import { IState } from "../istate";
+
+type Options = {
+  size?: number;
+};
 
 export class Ruler implements Draw {
   public readonly height: number = 25;
   public readonly width: number = 25;
+  public readonly fontSize: number;
 
   public bg: string = "#e8e8e8";
   public fg: string = "#000";
 
-  draw(state: State) {
+  constructor({ size = 25 }: Options = {}) {
+    this.height = size;
+    this.width = size;
+    this.fontSize = Math.floor(size / 2.5);
+  }
+
+  public draw(state: IState) {
     state.canvas.save();
+    state.canvas.ctx.font = `${this.fontSize}px sans-serif`;
     this.drawTopRuler(state);
     this.drawLeftRuler(state);
     state.canvas.restore();
   }
 
-  drawTopRuler(state: State) {
+  private drawTopRuler(state: IState) {
     state.canvas.save();
 
     state.canvas.ctx.fillStyle = this.bg;
@@ -47,7 +59,7 @@ export class Ruler implements Draw {
     state.canvas.restore();
   }
 
-  drawLeftRuler(state: State) {
+  private drawLeftRuler(state: IState) {
     state.canvas.save();
 
     state.canvas.ctx.fillStyle = this.bg;
