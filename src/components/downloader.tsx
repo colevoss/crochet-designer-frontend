@@ -1,8 +1,9 @@
+import { Download } from "lucide-react";
 import { State, useDesign } from "@/design";
+import { ToolButton } from "./tool-button";
 
 function download(design: State) {
   const link = document.createElement("a");
-  // link.style = "display:hidden";
   link.download = `design-${Date.now()}.png`;
   const imageState = design.createImageState();
   imageState.draw();
@@ -15,8 +16,12 @@ export function Downloader() {
   const design = useDesign();
 
   return (
-    <div className="flex flex-1 flex-row content-end items-center justify-end">
-      <button onClick={() => download(design)}>Download</button>
+    <div className="flex flex-1 flex-row justify-end p-2">
+      <ToolButton onClick={() => download(design)} desc="Download">
+        <div className="p-3">
+          <Download size={16} />
+        </div>
+      </ToolButton>
     </div>
   );
 }
