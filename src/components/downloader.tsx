@@ -4,7 +4,7 @@ import { ToolButton } from "./tool-button";
 
 function download(design: State) {
   const link = document.createElement("a");
-  link.download = `design-${Date.now()}.png`;
+  link.download = `crochet-design-${Date.now()}.png`;
   const imageState = design.createImageState();
   imageState.draw();
   link.href = imageState.canvas.element.toDataURL("image/png");
