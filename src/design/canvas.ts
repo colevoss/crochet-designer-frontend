@@ -1,4 +1,6 @@
-export class Canvas {
+import { ICanvas } from "./icanvas";
+
+export class Canvas implements ICanvas {
   #height: number = 0;
   #width: number = 0;
   id: string;
@@ -69,15 +71,15 @@ export class Canvas {
     this.element.style.height = `${this.#height}px`;
   }
 
-  save() {
+  public save() {
     this.ctx.save();
   }
 
-  restore() {
+  public restore() {
     this.ctx.restore();
   }
 
-  clear() {
+  public clear() {
     this.ctx.clearRect(0, 0, this.#width, this.#height);
   }
 }

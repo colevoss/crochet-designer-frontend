@@ -1,5 +1,5 @@
-import { State } from "./state";
+import { IState } from "./istate";
 
 export interface Draw {
-  draw(canvas: State): void;
+  draw(canvas: IState): void;
 }

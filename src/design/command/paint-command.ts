@@ -1,3 +1,4 @@
+import { IState } from "../istate";
 import { Color } from "../pallette";
 import { State } from "../state";
 import { Maybe } from "../types";
@@ -13,7 +14,7 @@ export class PaintCellCommand extends Command {
     super();
   }
 
-  public execute(state: State): boolean {
+  public execute(state: IState): boolean {
     const cell = state.cells.getOrAdd(state, this.idx);
 
     if (cell.color === this.color) {
@@ -27,7 +28,7 @@ export class PaintCellCommand extends Command {
     return true;
   }
 
-  public undo(state: State) {
+  public undo(state: IState) {
     const cell = state.cells.get(this.idx);
 
     if (!cell) {
