@@ -26,7 +26,7 @@ export class ImageGrid extends BaseGrid {
     this.cellWidth = width / cols;
     this.cellHeight = height / rows;
 
-    this.width = width + this.ruler.width;
-    this.height = height + this.ruler.height;
+    this.width = width + this.ruler.width + this.ruler.width;
+    this.height = height + this.ruler.height + this.ruler.height;
   }
 }

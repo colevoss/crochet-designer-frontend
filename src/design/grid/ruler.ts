@@ -22,8 +22,10 @@ export class Ruler implements Draw {
   public draw(state: IState) {
     state.canvas.save();
     state.canvas.ctx.font = `${this.fontSize}px sans-serif`;
+
     this.drawLeftRuler(state);
     this.drawTopRuler(state);
+
     state.canvas.restore();
   }
 
@@ -32,6 +34,10 @@ export class Ruler implements Draw {
 
     state.canvas.ctx.fillStyle = this.bg;
     state.canvas.ctx.fillRect(0, 0, state.canvas.width, this.height);
+    // Base Y coord for bottom ruler
+    const bottomYBase = state.canvas.height - this.height;
+    state.canvas.ctx.fillRect(0, bottomYBase, state.canvas.width, this.height);
+
     state.canvas.ctx.fillStyle = this.fg;
 
     // caching because they are computed
@@ -39,6 +45,8 @@ export class Ruler implements Draw {
     const halfCellWidth = cellWidth / 2;
     const halfCellHeight = this.height / 2;
     const offset = state.grid.offsetX + this.width;
+
+    const shouldAlternate = cellWidth < 20;
 
     for (let i = 1; i <= state.grid.cols; i++) {
       const str = String(i);
@@ -58,7 +66,18 @@ export class Ruler implements Draw {
         meas.actualBoundingBoxDescent + meas.actualBoundingBoxAscent;
 
       const y = halfCellHeight - height / 2 + height; // add height again because fillText y is the baseline
-      state.canvas.ctx.fillText(str, x, y, cellWidth);
+
+      // If cell is too small, render odds of top and evens on bottom
+      // top
+      if (!shouldAlternate || i % 2 === 0) {
+        state.canvas.ctx.fillText(str, x, y, cellWidth);
+      }
+
+      // bottom
+      if (!shouldAlternate || i % 2 === 1) {
+        const bottomY = bottomYBase + y;
+        state.canvas.ctx.fillText(str, x, bottomY, cellWidth);
+      }
     }
 
     state.canvas.restore();
@@ -70,6 +89,10 @@ export class Ruler implements Draw {
     state.canvas.ctx.fillStyle = this.bg;
     state.canvas.ctx.fillRect(0, 0, this.width, state.canvas.height);
 
+    // Base X for the right ruler
+    const rightXBase = state.canvas.width - this.width;
+    state.canvas.ctx.fillRect(rightXBase, 0, this.width, state.canvas.height);
+
     state.canvas.ctx.fillStyle = this.fg;
 
     // caching because they are computed
@@ -78,6 +101,8 @@ export class Ruler implements Draw {
     const halfCellHeight = cellHeight / 2;
     const offset = state.grid.offsetY + this.height;
     const halfCellWidth = this.width / 2;
+
+    const shouldAlternate = cellHeight < 20;
 
     for (let i = 1; i <= state.grid.rows; i++) {
       const str = String(i);
@@ -104,7 +129,17 @@ export class Ruler implements Draw {
       const textWidth = meas.width;
       const x = halfCellWidth - textWidth / 2;
 
-      state.canvas.ctx.fillText(str, x, y, cellWidth);
+      // If cell is too small, render odds of left and evens on right
+      // Left
+      if (!shouldAlternate || i % 2 === 1) {
+        state.canvas.ctx.fillText(str, x, y, cellWidth);
+      }
+
+      // right
+      if (!shouldAlternate || i % 2 === 0) {
+        const rightX = rightXBase + x;
+        state.canvas.ctx.fillText(str, rightX, y, cellWidth);
+      }
     }
 
     state.canvas.restore();
