@@ -31,7 +31,7 @@ export class Grid extends BaseGrid {
     this.width = state.canvas.width;
     this.height = state.canvas.height;
 
-    this.cellWidth = (this.width - this.ruler.width) / this.cols;
+    this.cellWidth = (this.width - this.ruler.width * 2) / this.cols;
     this.cellHeight = this.cellWidth;
   }
 

@@ -43,7 +43,7 @@ export abstract class BaseGrid implements Draw {
   }
 
   public gridWidthAtZoom(z: number): number {
-    return z * this.cols * this.cellWidth + this.ruler.width;
+    return z * this.cols * this.cellWidth + this.ruler.width + this.ruler.width;
   }
 
   public zoom(z: number) {
