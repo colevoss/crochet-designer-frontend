@@ -1,6 +1,6 @@
 import { Draw } from "../draw";
 import { IState } from "../istate";
-import { CellDimensions } from "../types";
+import { CellDimensions, Coord } from "../types";
 import { Ruler } from "./ruler";
 
 export abstract class BaseGrid implements Draw {
@@ -148,6 +148,17 @@ export abstract class BaseGrid implements Draw {
     state.canvas.ctx.strokeRect(x, y, w, h);
 
     state.canvas.restore();
+  }
+
+  public getCellCoord(x: number, y: number): Coord {
+    const col = Math.floor(
+      (x - this.offsetX - this.ruler.width) / (this.cellWidth * this.z),
+    );
+    const row = Math.floor(
+      (y - this.offsetY - this.ruler.height) / (this.cellHeight * this.z),
+    );
+
+    return [col + 1, row + 1];
   }
 
   public getIdxAtCoord(x: number, y: number): number {
