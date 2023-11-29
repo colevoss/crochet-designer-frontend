@@ -28,8 +28,5 @@ export class ImageGrid extends BaseGrid {
 
     this.width = width + this.ruler.width;
     this.height = height + this.ruler.height;
-
-    console.log(Math.min(cols, rows) / Math.max(cols, rows));
-    console.log(this);
   }
 }

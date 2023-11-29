@@ -26,7 +26,7 @@ export class ImageState implements IState {
 
     this.canvas.restore();
 
-    this.grid.draw(this);
     this.cells.draw(this);
+    this.grid.draw(this);
   }
 }
