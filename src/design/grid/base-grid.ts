@@ -99,7 +99,7 @@ export abstract class BaseGrid implements Draw {
   public draw(state: IState): void {
     state.canvas.save();
 
-    state.canvas.ctx.lineWidth = 1;
+    state.canvas.ctx.lineWidth = 0.5;
     state.canvas.ctx.strokeStyle = "#c4c4c4";
 
     const widthMult = this.realCellWidth;
