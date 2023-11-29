@@ -11,7 +11,20 @@ export abstract class BaseMode implements Mode {
   // @ts-ignore
   public mouseUp(state: State, event: MouseEvent) {}
   // @ts-ignore
-  public mouseMove(state: State, event: MouseEvent) {}
+  public mouseMove(state: State, event: MouseEvent) {
+    const [col, row] = state.grid.getCellCoord(event.offsetX, event.offsetY);
+
+    if (
+      state.grid.ruler.hilightedRow === row &&
+      state.grid.ruler.hilightedCol === col
+    ) {
+      return;
+    }
+
+    state.grid.ruler.hilightedCol = col;
+    state.grid.ruler.hilightedRow = row;
+    state.grid.ruler.draw(state);
+  }
 
   // @ts-ignore
   public keyDown(state: State, event: KeyboardEvent) {

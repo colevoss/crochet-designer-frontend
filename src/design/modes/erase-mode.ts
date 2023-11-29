@@ -31,6 +31,7 @@ export class EraseMode extends BaseMode {
   }
 
   public mouseMove(state: State, event: MouseEvent): void {
+    super.mouseMove(state, event);
     if (this.state === EraseModeState.Idle) {
       return;
     }
